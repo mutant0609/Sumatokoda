@@ -18,7 +18,7 @@
 
 /* 
  * Base code for CS 251 Software Systems Lab 
- * Department of Computer Science and Engineering, IIT Bombay
+ * Department of Computer Science and Engineering IIT Bombay
  * 
  */
 
