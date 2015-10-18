@@ -783,7 +783,478 @@ namespace cs251
 
       m_world->CreateJoint(&jd);
     }
-      
+      ///////////////////////// W starts //////////////////////////
+    // W 1st seg
+     for(int i=0;i<7;i++)
+    {
+        b2Body* b2;
+        b2PolygonShape shape;
+        b2FixtureDef resti;
+        resti.restitution=1.0;
+        const b2Vec2 center((-20.0+1.0*i),(40.0-0.2*i*i));
+        shape.SetAsBox(1.5f, 0.1f,center,-1.0f);
+        b2BodyDef bd;
+        b2 = m_world->CreateBody(&bd);
+        b2->CreateFixture(&shape, 10.0f);
+
+    }
+
+    //W 4th seg
+     for(int i=0;i<6;i++)
+    {
+        b2Body* b2;
+        b2PolygonShape shape;
+        b2FixtureDef resti;
+        resti.restitution=1.0;
+        const b2Vec2 center((-1.0*i),(38.0-0.2*i*i));
+        shape.SetAsBox(1.0f, 0.1f,center,1.0f);
+        b2BodyDef bd;
+        b2 = m_world->CreateBody(&bd);
+        b2->CreateFixture(&shape, 10.0f);
+
+    }
+// W 3rd seg
+     for(int i=0;i<5;i++)
+    {
+        b2Body* b2;
+        b2PolygonShape shape;
+        b2FixtureDef resti;
+        resti.restitution=1.0;
+        const b2Vec2 center((-9.0-1.2*i),(36.0-0.2*i*i));
+        shape.SetAsBox(1.0f, 0.1f,center,0.6f);
+        b2BodyDef bd;
+        b2 = m_world->CreateBody(&bd);
+        b2->CreateFixture(&shape, 10.0f);
+
+    }
+// W 2nd seg
+     for(int i=0;i<5;i++)
+    {
+        b2Body* b2;
+        b2PolygonShape shape;
+        b2FixtureDef resti;
+        resti.restitution=1.0;
+        const b2Vec2 center((-10.0+1.2*i),(36.0-0.2*i*i));
+        shape.SetAsBox(0.5+0.1*i, 0.1,center,-0.6f);
+        b2BodyDef bd;
+        b2 = m_world->CreateBody(&bd);
+        b2->CreateFixture(&shape, 10.0f);
+
+    }
+    //W plank 1
+
+    {
+        b2Body* b2;
+        b2PolygonShape shape;
+        b2FixtureDef resti;
+        resti.restitution=1.0;
+        const b2Vec2 center((-14.0),(35.0));
+        shape.SetAsBox(1.5, 0.1,center,0.0f);
+        b2BodyDef bd;
+        b2 = m_world->CreateBody(&bd);
+        b2->CreateFixture(&shape, 10.0f);
+    }
+
+    //W plank 2
+
+    {
+        b2Body* b2;
+        b2PolygonShape shape;
+        b2FixtureDef resti;
+        resti.restitution=1.0;
+        const b2Vec2 center((-6.0),(35.0));
+        shape.SetAsBox(1.5, 0.1,center,0.0f);
+        b2BodyDef bd;
+        b2 = m_world->CreateBody(&bd);
+        b2->CreateFixture(&shape, 10.0f);
+    }
+
+    //  launching plank of ball
+    {
+        b2Body* b2;
+        b2PolygonShape shape;
+        b2FixtureDef resti;
+        resti.restitution=1.0;
+        const b2Vec2 center((-20.0),(41.0));
+        shape.SetAsBox(1.0, 0.1,center,-0.2f);
+        b2BodyDef bd;
+        b2 = m_world->CreateBody(&bd);
+        b2->CreateFixture(&shape, 10.0f);
+    }
+
+    // The ball
+  {
+      b2Body* spherebody;
+
+      b2CircleShape circle;
+      circle.m_radius = 0.4;
+
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 8.0f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 1.0f;
+
+    b2BodyDef ballbd;
+    ballbd.type = b2_dynamicBody;
+
+    ballbd.position.Set(-20.0f, 45.0f);
+    spherebody = m_world->CreateBody(&ballbd);
+    spherebody->CreateFixture(&ballfd);
+
+    }
+
+    //Motor
+    {
+    b2Body* motorpane;
+    {
+     b2PolygonShape shape;
+     b2BodyDef bd;
+     shape.SetAsBox(0.2f, 3.5f);
+     bd.position.Set(2.0f, 42.5f);
+     bd.type = b2_dynamicBody;
+     motorpane = m_world->CreateBody(&bd);
+     motorpane->CreateFixture(&shape, 0.5f);
+
+    }
+    b2Body* pin;
+    {
+     b2CircleShape cshape;
+     b2BodyDef bd;
+     cshape.m_radius = 0.4;
+     bd.position.Set(2.0f, 42.5f);
+     pin = m_world->CreateBody(&bd);
+     pin->CreateFixture(&cshape, 0.5f);
+    }
+
+  b2RevoluteJointDef revoluteJointDef;
+  revoluteJointDef.bodyA = motorpane;
+  revoluteJointDef.bodyB = pin;
+  revoluteJointDef.collideConnected = false;
+  revoluteJointDef.localAnchorA.Set(0,0);
+  revoluteJointDef.localAnchorB.Set(0,0);
+  revoluteJointDef.enableMotor = true;
+  revoluteJointDef.maxMotorTorque = 1000.0f;
+  revoluteJointDef.motorSpeed = 9.0f;
+  b2RevoluteJoint* m_joint = (b2RevoluteJoint*)m_world->CreateJoint( &revoluteJointDef );
+  }
+
+     ////////////////////////// W ends  //////////////////////////
+
+  //////////////////////////////G starts /////////////////////////
+ //G part
+  {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.25f, 4.0f);
+
+      b2BodyDef bd;
+      bd.position.Set(29.0f, 30.0f);
+      b2Body* g1 = m_world->CreateBody(&bd);
+      g1->CreateFixture(&shape, 0.0f);
+
+      shape.SetAsBox(4.0f,0.25f);
+      bd.position.Set(33.0f, 25.5f);
+      b2Body* g2 = m_world->CreateBody(&bd);
+       g2->CreateFixture(&shape, 0.0f);
+
+     const b2Vec2 center(33.0f,41.0f);
+     shape.SetAsBox(4.0f,0.25f,center,0.0f);
+     b2BodyDef bd2;
+     b2Body* stop = m_world->CreateBody(&bd2);
+     stop->CreateFixture(&shape, 10.0f);
+
+
+       shape.SetAsBox(0.6f, 3.0f);
+        bd.position.Set(38.0f, 29.0f);
+      b2Body* g3 = m_world->CreateBody(&bd);
+      g3->CreateFixture(&shape, 0.0f);
+
+      shape.SetAsBox(0.6f, 0.6f);
+        bd.position.Set(38.0f, 33.0f);
+        bd.type = b2_dynamicBody;
+      b2Body* g4 = m_world->CreateBody(&bd);
+      g4->CreateFixture(&shape, 0.0f);
+
+
+
+    }
+
+
+    //G-Door
+  {
+  b2Body* top;
+  {
+     b2CircleShape cshape;
+     b2BodyDef bd;
+     cshape.m_radius = 0.4;
+     bd.position.Set(29.0f, 38.0f);
+     top = m_world->CreateBody(&bd);
+     top->CreateFixture(&cshape, 0.5f);
+  }
+  b2Body* door;
+  {
+    b2PolygonShape shape;
+    shape.SetAsBox(0.25f,3.0f);
+    b2BodyDef doordef;
+    doordef.type=b2_dynamicBody;
+    doordef.position.Set(29.0f,38.0f);
+    door=m_world->CreateBody(&doordef);
+    door->CreateFixture(&shape,0.5f);
+  }
+
+  b2RevoluteJointDef revoluteJointDef;
+  revoluteJointDef.bodyA = top;
+  revoluteJointDef.bodyB = door;
+  revoluteJointDef.collideConnected = false;
+  revoluteJointDef.localAnchorA.Set(0.0f,0.0f);//the top right corner of the box
+  revoluteJointDef.localAnchorB.Set(0.0f,0.0f);//center of the circle
+
+  b2RevoluteJoint* m_joint2 = (b2RevoluteJoint*)m_world->CreateJoint( &revoluteJointDef );
+  }
+
+  //////////////////////////////G ends  //////////////////////////
+
+    ////////////////////////// A starts ////////////////////////////
+     //start of code for A
+
+    //middle horizontal shelf
+
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(6.0f, 0.15f, b2Vec2(-20.f,20.f), 0.0f);
+  
+      b2BodyDef bd;
+      bd.position.Set(35.0f, 15.0f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+//firstdown1 from the middle hor shelf
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(1.0f, 0.15f, b2Vec2(-20.f,20.f), 0.0f);
+  
+      b2BodyDef bd;
+      bd.position.Set(27.0f, 13.0f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+//firstdown2 from mid hor shelf
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(1.0f, 0.15f, b2Vec2(-20.f,20.f), 0.0f);
+  
+      b2BodyDef bd;
+      bd.position.Set(43.0f, 13.0f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+//second1 from mid hor shelf
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(1.0f, 0.15f, b2Vec2(-20.f,20.f), 0.0f);
+  
+      b2BodyDef bd;
+      bd.position.Set(45.0f, 11.0f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+//second2 from mid hor shelf
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(1.0f, 0.15f, b2Vec2(-20.f,20.f), 0.0f);
+  
+      b2BodyDef bd;
+      bd.position.Set(25.0f, 11.0f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+//firstup1 from mid hor shelf
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.3f, 0.15f, b2Vec2(-20.f,20.f), 0.0f);
+  
+      b2BodyDef bd;
+      bd.position.Set(32.0f, 17.0f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+//firstup2 from mid hor shelf
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.3f, 0.15f, b2Vec2(-20.f,20.f), 0.0f);
+  
+      b2BodyDef bd;
+      bd.position.Set(38.0f, 17.0f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+//top hor shelf
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.5f, 0.15f, b2Vec2(-20.f,20.f), 0.0f);
+  
+      b2BodyDef bd;
+      bd.position.Set(35.0f, 19.0f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+    
+    //Dominos on A
+
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 1.7f);
+  
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      fd.density = 20.0f;
+      fd.friction = 0.1f;
+    
+    b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.position.Set(15.0f, 47.0f);
+    b2Body* body = m_world->CreateBody(&bd);
+    body->CreateFixture(&fd);
+  
+    }
+
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 1.7f);
+  
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      fd.density = 20.0f;
+      fd.friction = 0.1f;
+    
+    b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.position.Set(12.0f, 45.0f);
+    b2Body* body = m_world->CreateBody(&bd);
+    body->CreateFixture(&fd);
+  
+    }
+
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 1.7f);
+  
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      fd.density = 20.0f;
+      fd.friction = 0.1f;
+    
+    b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.position.Set(18.0f, 45.0f);
+    b2Body* body = m_world->CreateBody(&bd);
+    body->CreateFixture(&fd);
+  
+    }
+
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 1.7f);
+  
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      fd.density = 20.0f;
+      fd.friction = 0.1f;
+    
+    b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.position.Set(9.5f, 41.0f);
+    b2Body* body = m_world->CreateBody(&bd);
+    body->CreateFixture(&fd);
+
+    }
+
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 1.7f);
+  
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      fd.density = 20.0f;
+      fd.friction = 0.1f;
+    
+    b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.position.Set(20.5f, 41.0f);
+    b2Body* body = m_world->CreateBody(&bd);
+    body->CreateFixture(&fd);
+  
+    }
+
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 1.7f);
+  
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      fd.density = 20.0f;
+      fd.friction = 0.1f;
+    
+    b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.position.Set(6.5f, 37.0f);
+    b2Body* body = m_world->CreateBody(&bd);
+    body->CreateFixture(&fd);
+
+    }
+
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 1.7f);
+  
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      fd.density = 20.0f;
+      fd.friction = 0.1f;
+    
+    b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.position.Set(23.5f, 37.0f);
+    b2Body* body = m_world->CreateBody(&bd);
+    body->CreateFixture(&fd);
+  
+    }
+
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 1.7f);
+  
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      fd.density = 20.0f;
+      fd.friction = 0.1f;
+  
+    b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.position.Set(4.5f, 33.0f);
+    b2Body* body = m_world->CreateBody(&bd);
+    body->CreateFixture(&fd);
+  
+    }
+
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 1.7f);
+  
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      fd.density = 20.0f;
+      fd.friction = 0.1f;
+    
+    b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.position.Set(25.5f, 33.0f);
+    b2Body* body = m_world->CreateBody(&bd);
+    body->CreateFixture(&fd);
+  
+    }
+
+    ////////////////////////// A ends  ////////////////////////////
 
   }
 
