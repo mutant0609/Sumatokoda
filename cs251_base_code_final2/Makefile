@@ -34,6 +34,7 @@ LIBS = -lBox2D -lglui -lglut -lGLU -lGL
 CPPFLAGS =-g -O3 -Wall -fno-strict-aliasing
 CPPFLAGS+=-I $(BOX2D_ROOT)/include -I $(GLUI_ROOT)/include
 LDFLAGS+=-L $(BOX2D_ROOT)/lib -L $(GLUI_ROOT)/lib
+CPPFLAGSPG =-pg -O3 -Wall -fno-strict-aliasing
 
 ######################################
 
@@ -57,7 +58,7 @@ INCS := $(wildcard $(SRCDIR)/*.hpp)
 OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 
-.PHONY: all setup doc clean distclean report codeDoc release
+.PHONY: all setup doc clean distclean report codeDoc release profileobj profile
 
 all: setup release
 
@@ -68,9 +69,23 @@ setup:
 	@mkdir -p obj
 	@mkdir -p bin
 
-release: $(OBJS)
+b2dsetup:
+	@if [ ! -d "$(EXTERNAL_ROOT)/src/Box2D" ]; \
+	then $ tar zxf $(EXTERNAL_ROOT)/src/Box2D.tgz -C $(EXTERNAL_ROOT)/src; \
+	else $(ECHO) "Box2D is already installed..."; \
+	fi;
+	@cd $(EXTERNAL_ROOT); \
+	cd src; \
+	cd Box2D; \
+	mkdir build251; \
+	cd build251; \
+	cmake -DCMAKE_BUILD_TYPE=Release ../; \
+	make; \
+	make install; \
+
+release: setup b2dsetup $(OBJS) 
 	@$(PRINTF) "$(MESG_COLOR)Building executable:$(NO_COLOR) $(FILE_COLOR) %16s$(NO_COLOR)" "$(notdir $@)"
-	@$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS) 2> temp.log || touch temp.err
+	@$(CC) -pg -o $@ $(LDFLAGS) $(OBJS) $(LIBS) 2> temp.log || touch temp.err
 	@if test -e temp.err; \
 	then $(PRINTF) $(ERR_FMT) $(ERR_STRING) && $(CAT) temp.log; \
 	elif test -s temp.log; \
@@ -92,6 +107,9 @@ $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	else printf "${OK_COLOR}%30s\n${NO_COLOR}" "[OK]"; \
 	fi;
 	@$(RM) -f temp.log temp.err
+
+
+
 clean:	
 	@$(ECHO) -n "Cleaning up..."
 	@$(RM) -rf $(OBJDIR) *~ $(DEPS) $(SRCDIR)/*~
@@ -105,12 +123,28 @@ codeDoc:
 
 report:
 	@cd ./doc
+	@cp ./doc/*.bib ./
 	@pdflatex ./doc/ProjectReport.tex > tp.log
+	@echo "Step 1st done..."
+	
+	@bibtex ProjectReport > tp.log
+	
+	@echo "Step 2nd done..."	
+	@pdflatex ./doc/ProjectReport.tex > tp.log
+	@echo "Step 3rd done..."	
+	@pdflatex ./doc/ProjectReport.tex > tp.log
+	@echo "report done..."	
 	@cd ./doc 
 	@pdflatex ./doc/BeamerPresentation.tex > tp.log	
-	@rm *.log *.out *.aux *.nav 
-	@rm *.snm *.toc
+	@echo "presentation done..."
 	@mv *.pdf ./doc
+	@rm -f *.log *.out *.aux *.nav 
+	@rm -f *.snm *.toc *.bbl *.blg
+	@rm -f *.bib
+	#@rm ./doc/*.bbl ./doc/*.log ./doc/*.out
+	@rm -f ./doc/*.aux 
+	@rm -f ./doc/ProjectReport.blg 
+
 
 
 
@@ -118,9 +152,22 @@ report:
 distclean:clean
 	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
 	@cd $(DOCDIR)
-	@rm ./doc/*.pdf 2> tp.log
-	@rm *.log 2> tp.log
-	@rm *.aux 2> tp.log
-	@rm *.out 2> tp.log
-	@rm tp.log
+	@rm -f ./doc/*.pdf 2> tp.log
+	@rm -f ./doc/analysis.txt 2> tp.log
+	@rm -f ./doc/profile.png	
+	@rm -f tp.log
+
+profile: all
+	@./bin/release	
+	@gprof ./bin/release ./bin/gmon.out  > analysis.txt
+	@python3 ./doc/gprof2dot.py analysis.txt >callgraph.dot
+	@dot -Tpng callgraph.dot > profile.png	
+	@mv *.png *.txt ./doc/
+	@rm -f callgraph.dot 
+
+-include -include $(OBJS:.o=.d)
+
+
+	
+
 
