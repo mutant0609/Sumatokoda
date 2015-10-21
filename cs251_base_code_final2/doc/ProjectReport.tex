@@ -2,7 +2,7 @@
 \usepackage{graphicx}
 \usepackage{wrapfig}
 \usepackage{hyperref}
-\usepackage{natbib}
+
 \usepackage{sidecap}
 \usepackage{verbatimbox}
 \setlength{\topmargin}{-.5in}
@@ -78,8 +78,35 @@ be taken when sensors come into contact. This was the key feature we used in mak
 \newpage
 \section{Profiling}
 We used gprof tool to profile the code. We have the following observations for the same.
+These are the top 3 functions who consume more time.
+
+\begin{center}
+\begin{tabular}{ ||c c c c|| } 
+ \hline      
+time & seconds & seconds & calls Ts/call Ts/call name  \\
+40.35 & 0.23 & 0.23 & b2World::SolveTOI() \\
+21.05 & 0.35 & 0.12 & b2ContactManager::AddPair() \\
+14.04 & 0.43 & 0.08 & b2World::Solve() \\
+ \hline
+\end{tabular}
+\end{center}
+ 
+In the original base code, such top 3 functions consuming most of the time were as follows:
+\begin{center}
+\begin{tabular}{ ||c c c c|| } 
+ \hline      
+time & seconds & seconds & calls Ts/call Ts/call name  \\
+10.71 & 0.03 & 0.03 & operator*() \\
+7.14 &  0.05 & 0.02 & b2Dot() \\
+7.14 & 0.07 & 0.02 & b2Vec2::b2Vec2() \\
+ \hline
+\end{tabular}
+\end{center}
 
 
+
+
+Since we implemented sensors in our project, more time was spent in functions related to that, like SolveTOI and b2ContactManager:: AddPair().
 The efficiency of various functions did not change much after making specific changes after looking at above profiling data. 
 \newpage
 \section{Honor code and Contributions}
@@ -101,18 +128,26 @@ Conveyor belts, presentation, latex report, 'A' part.\\
 We have helped each other in all these things mentioned above.\\
 \newpage
 \section{References}
+
 The following sites were very useful to study box2D
-http://www.iforce2d.net/b2dtut/
-
-http://www.box2d.org/manual.html
-
+\cite{DUMMY:1}
+\cite{DUMMY:2}\\
 Following youtube links were very useful to get idea of what exciting things can be done in box2D.
+\cite{DUMMY:3}
+\cite{DUMMY:4}
+\cite{DUMMY:5}
+\cite{DUMMY:6}
 
-https://www.youtube.com/watch?v=FZJOaY6Xh7Y
 
-https://www.youtube.com/watch?v=ykhnhoQEkXg
 
-https://www.youtube.com/watch?v=8kZRpouZ3OQ
+\newpage
 
-https://www.youtube.com/watch?v=FZJOaY6Xh7Y
+\bibliography{ProjectReport} 
+\bibliographystyle{ieeetr}
+
+
+
+
+
+
 \end{document}
