@@ -158,6 +158,7 @@ distclean:clean
 	@$(RM) -rf ./external/lib/*
 	@$(RM) -rf ./external/include/*
 	@$(RM) -rf ./external/src/Box2D
+	@$(RM) -rf gmon.out
 
 profile: all
 	@./bin/release	
